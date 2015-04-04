@@ -1,0 +1,115 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>CodeChallenge</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+    
+    </head>
+    <body>
+        <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="container-fluid">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div id="modal-chart">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1 arrow-button left">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                </div>
+                <div class="col-md-10 feed-container">
+                    <table>
+                    <tr class="wide-container">
+                    </tr>
+                    </table>
+                </div>
+                <div class="col-md-1 arrow-button right">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <footer class="footer col-md-12">
+                    <h4>recent</h4>
+                    <div id="chart">
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <!-- build:js scripts/vendor.js -->
+        <script src="../bower_components/d3/d3.min.js"></script>
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+        <script src="../bower_components/underscore/underscore-min.js"></script>
+        <script src="../bower_components/backbone/backbone.js"></script>
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="../bower_components/moment/moment.js"></script>
+        <script src="../bower_components/modernizr/modernizr.js"></script>
+        <script src="views/feedItemView.js"></script>
+        <script src="models/feedItemModel.js"></script>
+        <script src="collections/feedCollection.js"></script>
+        <!-- endbuild -->
+
+
+        <!-- build:js({.tmp,app}) scripts/main.js -->
+        
+        <!-- endbuild -->
+
+        <script>
+            
+            var feedCollection = new app.FeedCollection();
+            feedCollection.createFeedItems(feedCollection.data);
+
+            $(document).ready(function(){
+                function changeFeed(value){
+                    var newValue = $(".feed-container").scrollLeft() + ($(".feed-item").width()) * value;
+                    $(".feed-container").scroll();
+                    $(".feed-container").animate({ scrollLeft: newValue }, 800);
+                }
+
+                $('.arrow-button').on('click', function(e){
+                    var value;
+                    e.preventDefault();
+                    if( $(e.target).hasClass('glyphicon-chevron-right')){
+                        value = 1;
+                    }else{
+                        value = -1;
+                    }
+                    changeFeed(value);
+                });
+
+                $(document).keydown(function(e) {
+                    switch(e.which) {
+                        case 37: // left
+                            changeFeed(-1);
+                        break;
+
+                        case 39: // right
+                            changeFeed(1);
+                        break;
+
+                        default: return; // exit this handler for other keys
+                    }
+                    e.preventDefault(); // prevent the default action (scroll / move caret)
+                });
+            });
+        </script>
+</body>
+</html>
